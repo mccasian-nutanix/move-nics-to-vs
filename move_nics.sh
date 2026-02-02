@@ -159,7 +159,8 @@ while read -r line <&3; do
 
     if [[ -z "$destination_uuid" || "$destination_uuid" == "NOT_FOUND" ]]; then
         destination_uuid="N/A"
-        nic_count=0
+        echo "Subnet named '$subnet_name' not found on the destination virtual switch($DEST_VS). Skipping... Please use the clone_subnets.py script(read Readme)"
+        continue
     else
         raw_nics=$($SSH_CMD "$ACLI_PATH net.list_vms $source_uuid")
         nic_count=$(echo "$raw_nics" | awk 'NR>1' | wc -l)
