@@ -10,7 +10,7 @@ Before running this script, ensure you have:
 
 1. **Cloned Subnets**: Use the [`clone_subnets.py`](../clone_subnets/clone_subnets.py) script to create duplicate subnets on the destination virtual switch
 2. **SSH Access**: Either direct CVM access or SSH forwarding enabled from your jump host
-3. **Permissions**: Nutanix cluster administrative privileges
+3. **Permissions**: The ssh key needs to be added to Nutanix cluster -> Login to Prism Element with "admin" account(admin itself not any admin account) -> Cluster Lockdown -> + New Public Key
 4. **Network Connectivity**: Ability to ping target NIC IPs for pre/post-migration validation
 
 ## Usage
@@ -18,18 +18,18 @@ Before running this script, ensure you have:
 ### Remote Execution (from Jump Host/Gateway) - **RECOMMENDED**
 
 ```bash
-./nics_move.sh -c <cluster_fqdn>
+./move_nics.sh -c <cluster_fqdn>
 ```
 
 **Example:**
 ```bash
-./nics_move.sh -c mconclu0005.svc.bedag.ch
+./move_nics.sh -c spacex.nasa.com
 ```
 
 ### Local Execution (from CVM) - **LIMITED FUNCTIONALITY**
 
 ```bash
-./nics_move_from_cvm.sh
+./move_nics_from_cvm.sh
 ```
 
 **⚠️ CVM Version Limitations:**
@@ -70,7 +70,7 @@ This allows the script to authenticate to Nutanix clusters without storing crede
 
 ## Script Versions Comparison
 
-| Feature | Remote (`nics_move.sh`) | CVM (`nics_move_from_cvm.sh`) |
+| Feature | Remote (`move_nics.sh`) | CVM (`move_nics_from_cvm.sh`) |
 |---------|-------------------------|--------------------------------|
 | Execution Location | Jump host/Gateway | Directly on CVM |
 | SSH Requirement | Yes (to cluster) | No (local ACLI) |
@@ -103,7 +103,7 @@ The remote version can ping and validate frontend-connected NICs because it runs
   - NICs without IP addresses skip ping tests automatically
   - Post-check includes intelligent retry logic (5 packets) if pre-check was successful
 - **Color-Coded Feedback**: Immediate visual indication of migration success or issues
-- **Network Segmentation**: The remote version (`nics_move.sh`) can validate frontend-connected NICs, while the CVM version may have limited reach due to backend/frontend network separation
+- **Network Segmentation**: The remote version (`move_nics.sh`) can validate frontend-connected NICs, while the CVM version may have limited reach due to backend/frontend network separation
 - **Subnet Deletion**: Source subnets can be cleaned up automatically after successful migration of all NICs to reduce configuration clutter
 - Migration can be aborted at any subnet or individual NIC level by answering 'n' to prompts
 
